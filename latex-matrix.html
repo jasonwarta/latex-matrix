@@ -46,11 +46,16 @@
 					let cols = rows[row].children;
 					for(let col = 0; col < cols.length; col++) {
 						let val = cols[col].children[0].value;
+						let neg = false;
+						if (val.indexOf('-') == 0) {
+							neg = true;
+							val = val.substr(1,val.length);
+						}
 						if (val.indexOf('/') != -1) {
 							let vals = val.split('/');
 							val = `\\frac{${vals[0]}}{${vals[1]}}`
 						}
-						latex += `${val}`;
+						latex += `${neg ? '-' : ''}${val}`;
 						if (col == cols.length - 1) {
 							if (row == rows.length - 1) {
 								latex += " \n";
