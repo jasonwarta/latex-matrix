@@ -3,6 +3,15 @@
 <html>
 	<head>	
 		<script>
+			addEvents = () => {
+				window.addEventListener("keyup", function(event) {
+					event.preventDefault();
+					if (event.keyCode == 13) {
+						document.getElementById("gen-latex").click();
+					}
+				});
+			}
+
 			genTable = () => {
 				let table = document.getElementById('table');
 				let rows = document.getElementById('rows').value;
@@ -58,7 +67,7 @@
 			}
 		</script>
 	</head>
-	<body onload="genTable();">
+	<body onload="addEvents();genTable();" >
 		<label>Type 
 			<select id='matrix-value'>
 				<option value="matrix">matrix</option>
@@ -77,7 +86,7 @@
 		</label>
 		
 		<div id="table"></div>
-		<button onclick="genLatex()">Generate Latex</button>
+		<button id="gen-latex" onclick="genLatex()">Generate Latex</button>
 		<div>
 			<textarea id="latex" cols="40" rows="20"></textarea>
 		</div>
