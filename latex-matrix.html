@@ -39,7 +39,7 @@
 			genLatex = () => {
 				let table = document.getElementById('table').children[0];
 				let matrix_type = document.getElementById('matrix-value').value;
-				let latex = `$\\begin{${matrix_type}}\n`;
+				let latex = `$ \\begin{${matrix_type}}\n`;
 				let rows = table.children;
 				for (let row = 0; row < rows.length; row++ ){
 					let cols = rows[row].children;
@@ -61,7 +61,7 @@
 						}
 					}
 				}
-				latex += `\\end{${matrix_type}} $`
+				latex += `\\end{${matrix_type}}  $`
 
 				document.getElementById("latex").value = latex;
 			}
