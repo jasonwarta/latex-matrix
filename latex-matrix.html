@@ -35,7 +35,12 @@
 				for (let row = 0; row < rows.length; row++ ){
 					let cols = rows[row].children;
 					for(let col = 0; col < cols.length; col++) {
-						latex += `${cols[col].children[0].value}`;
+						let val = cols[col].children[0].value;
+						if (val.indexOf('/') != -1) {
+							let vals = val.split('/');
+							val = `\\frac{${vals[0]}}{${vals[1]}}`
+						}
+						latex += `${val}`;
 						if (col == cols.length - 1) {
 							if (row == rows.length - 1) {
 								latex += " \n";
