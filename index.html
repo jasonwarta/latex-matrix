@@ -18,6 +18,17 @@
 						document.getElementById("gen-latex-text").click();
 					}
 				});
+
+				document.getElementById('text-input').addEventListener('keydown', (e) => {
+					if (e.keyCode == 9) {
+						console.log(this);
+						let elem = document.getElementById('text-input');
+						elem.value += "	";
+						if (e.preventDefault)
+							e.preventDefault();
+						return false;
+					}
+				})
 			}
 
 			genTable = () => {
