@@ -1,176 +1,85 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html>
-	<head>	
-		<title>Latex Matrix Generator</title>
-		<script>
-			addEvents = () => {
-				// window.addEventListener("keyup", function(event) {
-				// 	event.preventDefault();
-				// 	if (event.keyCode == 13) {
-				// 		document.getElementById("gen-latex").click();
-				// 	}
-				// });
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Latex Matrix Generator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="main.js"></script>
+	<style>
+		.header {
+			grid-area: header;
+			text-align: center;
+			font-size: 20px;
+		}
+		.main {
+			grid-area: main;
+		}
 
-				document.getElementById('text-input').addEventListener("keyup", function(event) {
-					event.preventDefault();
-					if (event.keyCode == 13) {
-						document.getElementById("gen-latex-text").click();
-					}
-				});
-
-				document.getElementById('text-input').addEventListener('keydown', (e) => {
-					if (e.keyCode == 9) {
-						console.log(this);
-						let elem = document.getElementById('text-input');
-						elem.value += "	";
-						if (e.preventDefault)
-							e.preventDefault();
-						return false;
-					}
-				})
-			}
-
-			genTable = () => {
-				let table = document.getElementById('table');
-				let rows = document.getElementById('rows').value;
-				let cols = document.getElementById('cols').value;
-
-				table.innerHTML = "";
-
-				let table_wip = document.createElement('table');
-				for(let i = 0; i < rows; i++) {
-					let tr = document.createElement('tr');
-					for(let j = 0; j < cols; j++) {
-						let td = document.createElement('td');
-						let input = document.createElement('input');
-						input.type = 'text';
-						input.style.width = "30px";
-						input.value = `${String.fromCharCode(97+i)}_${j+1}`;
-						input.addEventListener("keyup", function(event) {
-							event.preventDefault();
-							if (event.keyCode == 13) {
-								document.getElementById("gen-latex-table").click();
-							}
-						});
-						td.appendChild(input);
-						tr.appendChild(td);
-					}
-					table_wip.appendChild(tr);
-				}
-				table.appendChild(table_wip);
-			}
-
-			genLatexFromText = () => {
-				let text = document.getElementById('text-input').value;
-				let matrix_type = document.getElementById('matrix-value').value;
-				let rows = text.split('\n');
-				let latex = `$ \\begin{${matrix_type}}\n`;
-				rows.forEach( (r_val,r_idx) => {
-					let cols = r_val.split('\t');
-					cols.forEach( (c_val,c_idx) => {
-						let neg = false;
-						if (c_val.indexOf('-') == 0) {
-							neg = true;
-							c_val = c_val.substr(1,c_val.length);
-						}
-						if (c_val.indexOf('/') != -1) {
-							let vals = c_val.split('/');
-							c_val = `\\frac{${vals[0]}}{${vals[1]}}`
-						}
-						latex += `${neg ? '-' : ''}${c_val}`;
-						if (c_idx == cols.length - 1) {
-							if (r_idx == rows.length - 1)
-								latex += " \n";
-							else 
-								latex += " \\\\\n";
-						} else {
-							latex += " & ";
-						}
-					});
-				});
-				latex += `\\end{${matrix_type}}  $`
-
-				document.getElementById("latex").value = latex;
-			}
-
-			genLatex = () => {
-				let table = document.getElementById('table').children[0];
-				let matrix_type = document.getElementById('matrix-value').value;
-				let latex = `$ \\begin{${matrix_type}}\n`;
-				let rows = table.children;
-				for (let row = 0; row < rows.length; row++ ){
-					let cols = rows[row].children;
-					for(let col = 0; col < cols.length; col++) {
-						let val = cols[col].children[0].value;
-						let neg = false;
-						if (val.indexOf('-') == 0) {
-							neg = true;
-							val = val.substr(1,val.length);
-						}
-						if (val.indexOf('/') != -1) {
-							let vals = val.split('/');
-							val = `\\frac{${vals[0]}}{${vals[1]}}`
-						}
-						latex += `${neg ? '-' : ''}${val}`;
-						if (col == cols.length - 1) {
-							if (row == rows.length - 1) {
-								latex += " \n";
-							} else {
-								latex += " \\\\\n";
-							}
-						} else {
-							latex += " & ";
-						}
-					}
-				}
-				latex += `\\end{${matrix_type}}  $`
-
-				document.getElementById("latex").value = latex;
-			}
-		</script>
-	</head>
-	<body onload="addEvents();genTable();" >
-		<h2>Latex Matrix Generator</h2>
-		<h4>Generate latex code for a given matrix</h4>
-		<p>Matrices can be entered in the table or pasted into the text field as a tab-delimited glob of text. Correct latex is generated for any entered fractions.</p>
-		<div>
-			<label>Type 
-				<select id='matrix-value'>
-					<option value="matrix">matrix</option>
-					<option value="pmatrix">pmatrix</option>
-					<option value="bmatrix" selected>bmatrix</option>
-					<option value="Bmatrix">Bmatrix</option>
-					<option value="vmatrix">vmatrix</option>
-					<option value="Vmatrix">Vmatrix</option>
-				</select>
-			</label>
-			<label>Rows 
-				<input type="number" id="rows" value="3" style="width:30px;" onchange="genTable();">
-			</label>
-			<label>Cols 
-				<input type="number" id="cols" value="3" style="width:30px;" onchange="genTable();">
-			</label>
+		.grid-container {
+			display: grid;
+			grid-template-columns: repeat(6,1fr);
+			grid-template-areas:
+				'header header header header header header'
+				'. main main main main .';
+		}
+		.grid-container > div {
+			padding: 20px 0;
+		}
+	</style>
+</head>
+<body onload="addEvents();genTable();">
+	<a href="https://github.com/jasonwarta/latex-matrix">
+		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
+			alt="Fork me on GitHub">
+	</a>
+	<div class="grid-container">
+		<div class="header">
+			Latex Matrix Generator
 		</div>
-		
-		<div style="display:inline">
-			<div id="table" style="display:inline-block;"></div>
-			<div id="textInput" style="display:inline-block;">
-				<div>
-					<span style="display: inherit;">Enter a tab-delimited matrix</span>
-				<textarea style="width:200px;min-height:80px" id="text-input" cols="30" placeholder="a_1	a_2	a_3
-b_1	b_2	b_3
-c_1	c_2	c_3"></textarea>
+		<div class="main">
+			<div>
+				<p>Generate latex code for a given matrix.</p>
+				<p>Matricies can be entered in the table or pasted into the text field as a tab-delimited glob of text. Correct latex is generated for any entered fractions.</p>
+			</div>
+			<div>
+				<label>Type
+					<select id='matrix-value'>
+						<option value="matrix">matrix</option>
+						<option value="pmatrix">pmatrix</option>
+						<option value="bmatrix" selected>bmatrix</option>
+						<option value="Bmatrix">Bmatrix</option>
+						<option value="vmatrix">vmatrix</option>
+						<option value="Vmatrix">Vmatrix</option>
+					</select>
+				</label>
+				<label>Rows
+					<input type="number" id="rows" value="3" style="width:30px;" onchange="genTable();">
+				</label>
+				<label>Cols
+					<input type="number" id="cols" value="3" style="width:30px;" onchange="genTable();">
+				</label>
+			</div>
+			<div style="display:inline">
+				<div id="table" style="display:inline-block;"></div>
+				<div id="textInput" style="display:inline-block;">
+					<div>
+						<span style="display: inherit;">Enter a tab-delimited matrix</span>
+					<textarea style="width:200px;min-height:80px" id="text-input" cols="30" placeholder="a_1	a_2	a_3
+		b_1	b_2	b_3
+		c_1	c_2	c_3"></textarea>
+					</div>
+					
 				</div>
-				
+			</div>
+			<br>
+			Generate Latex...
+			<button id="gen-latex-table" onclick="genLatex()">...From Table</button>
+			<button id="gen-latex-text" onclick="genLatexFromText()">...From Text</button>
+			<div>
+				<textarea id="latex" cols="40" rows="20"></textarea>
 			</div>
 		</div>
-		<br>
-		Generate Latex...
-		<button id="gen-latex-table" onclick="genLatex()">...From Table</button>
-		<button id="gen-latex-text" onclick="genLatexFromText()">...From Text</button>
-		<div>
-			<textarea id="latex" cols="40" rows="20"></textarea>
-		</div>
-	</body>
+	</div>
+</body>
 </html>
